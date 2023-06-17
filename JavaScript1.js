@@ -318,10 +318,11 @@ function Sign_In(){
     localStorage.setItem("User_Name", DataUsers[dataIn[0]].Emplyee_Name);
     localStorage.setItem("Branch_name",data[dataIn[1]].Branch_name);
     localStorage.setItem("Main_Id",data[dataIn[1]].Branch_MainNo);
-    }
     document.getElementById("loginPage").style.display="none"
     document.getElementById("MainPage").style.display="flex"
     location.reload();
+    }
+
 }
 
 function ShowPassword(){
