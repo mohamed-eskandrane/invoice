@@ -25,6 +25,7 @@ function init() {
       let Employee_ID=document.getElementById("Employee_ID")
       Employee_ID.value =localStorage.getItem("User_Id");
       document.getElementById("Employee_Name").value=localStorage.getItem("User_Name");
+      document.getElementById("Bill_Number").value=localStorage.getItem("Count_Bill");
     }
   }
   if( localStorage.getItem("User_Id")===null){
@@ -109,7 +110,26 @@ function init() {
             Loadinput3();
         })
     }
+function FindIdForBranch(BranchName){
+  for (let index = 0; index < data.length; index++) {
+    if( BranchName=== data[index].Branch_name){
+      return data[index].Branch_MainNo;
+    } 
+  }
+}
+function FindMainFormID(MainId){
+  for (let index = 0; index < data3.length; index++) {
+    if( MainId=== data3[index].Main_no){
+      return data3[index].Main_Name;
+    } 
+  }
+}
 
+function OnchangeBranch(){
+  let ZZ=FindIdForBranch(document.getElementById("BranchName").value);
+  let YY=FindMainFormID(ZZ);
+  document.getElementById("BranchMain").value=YY;
+}
 function Loadinput(){
 let myDropdown= document.getElementById("BranchName");
 let A_myDropdown;
@@ -122,6 +142,7 @@ let A_myDropdown;
   }
   if( localStorage.getItem("User_Id")!==null){
     document.getElementById("BranchName").value=localStorage.getItem("Branch_name");
+    OnchangeBranch();
   }
 }
 
@@ -218,7 +239,7 @@ function FoucusOutInput02() {
     document.getElementById("myDropdown3").className="Unshow";
 }
 function LoadDataSignIn(){
-  for (let index = 0; index < data2.length; index++) {
+  for (let index = 0; index < data3.length; index++) {
     if(localStorage.getItem("Main_Id")==data3[index].Main_no){document.getElementById("BranchMain").value=data3[index].Main_Name;return}
   }
 }
@@ -283,7 +304,7 @@ function IsfoundBranch(){
   let Branch_ID= document.getElementById("Branch_ID");
   let error_Branch_ID= document.getElementById("error_Branch_ID");
   for (let index = 0; index < data.length; index++) {
-    if(Branch_ID.value==data[index].Branch_no){dataIn.push(index);return true}
+    if(Branch_ID.value==data[index].Branch_no){dataIn.push(index); return true;}
   }
   error_Branch_ID.className="fa fa-warning";
   return false ;
@@ -295,8 +316,8 @@ function IsfoundUser(){
     for (let index = 0; index < DataUsers.length; index++) {
       if(User_PassWord.value==DataUsers[index].Employee_PassWord){dataIn.push(index);return true}
     }
-    error_User_ID.className="fa fa-warning";
-    return false ;
+      error_User_ID.className="fa fa-warning";
+      return false ;
   }
 
 
@@ -305,34 +326,52 @@ function Istrue(){
   let Branch_ID= document.getElementById("Branch_ID");
   let error_User_ID= document.getElementById("error_User_ID");
   let error_Branch_ID= document.getElementById("error_Branch_ID");
-  if(User_PassWord.value===""){ error_User_ID.className="fa fa-warning"; return false}else{ error_User_ID.className="" }
+  if(User_PassWord.value===""){ error_User_ID.className="fa fa-warning"; return false;}else{ error_User_ID.className="" }
   if(IsfoundUser()===false){return false}{error_User_ID.className=""}
-  if(Branch_ID.value===""){ error_Branch_ID.className="fa fa-warning" ; return false }else{ error_Branch_ID.className=""}
+  if(Branch_ID.value===""){ error_Branch_ID.className="fa fa-warning" ; return false; }else{ error_Branch_ID.className=""}
   if(IsfoundBranch()===false){return false}{error_Branch_ID.className="" }
-  return true
+  return true;
 }
 
 function Sign_In(){
   if (Istrue()===true){
     localStorage.setItem("User_Id", DataUsers[dataIn[0]].Employee_ID );
     localStorage.setItem("User_Name", DataUsers[dataIn[0]].Emplyee_Name);
+    localStorage.setItem("Count_Bill", DataUsers[dataIn[0]].Count_Bill);
     localStorage.setItem("Branch_name",data[dataIn[1]].Branch_name);
     localStorage.setItem("Main_Id",data[dataIn[1]].Branch_MainNo);
-    document.getElementById("loginPage").style.display="none"
-    document.getElementById("MainPage").style.display="flex"
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("MainPage").style.display="flex";
     location.reload();
-    }
-
+  }
 }
 
+function onsubmitForm(){
+  let MainForm=document.getElementById("MainForm")
+  var w = window.open('', 'form_target', 'width=600, height=400');
+  MainForm.target = 'form_target';
+  MainForm.action='https://script.google.com/macros/s/AKfycbxD0Ng6puf82pne2e6RQ4cx8mmEWwM7Ava5Ak0mMpKdtT22_3jBcPwrkG7eyY7II00M/exec'
+  MainForm.submit();
+  w.alert(w.location.hostname)
+  if (MainForm.onsubmit()==true){
+    let xx = setInterval(function(){
+      if (w.location.hostname=="script.googleusercontent.com"){
+        w.close();
+        clearInterval(xx);
+      }
+    }, 1000)
+    
+  }
+} 
+
 function ShowPassword(){
-  let User_PassWord= document.getElementById("User_PassWord")
-  let Eye_Password= document.getElementById("Eye_Password")
+  let User_PassWord= document.getElementById("User_PassWord");
+  let Eye_Password= document.getElementById("Eye_Password");
   if (Eye_Password.className=="fa fa-eye"){
-    User_PassWord.type="text"
-    Eye_Password.className="fa fa-eye-slash"
+    User_PassWord.type="text";
+    Eye_Password.className="fa fa-eye-slash";
   }else{
-    User_PassWord.type="password"
-    Eye_Password.className="fa fa-eye"
+    User_PassWord.type="password";
+    Eye_Password.className="fa fa-eye";
   }
 }
