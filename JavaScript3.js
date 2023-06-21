@@ -1,470 +1,489 @@
-:root{
-    --FColor:wheat;
-    --EColor:white;
-    --loginColor:whitesmoke;
-    --FontColor:#f2a20b;
-    --Font2Color:#a53333;
-    --Row1Color:rgb(155, 153, 153);
-    --Row1BackColor:rgb(202, 202, 202);
-    --inputBackColor:rgb(233, 231, 231);
-    --Font3Color:#a53333;
-    
-}
-@media screen and (min-width: 300px) and (max-width: 450px) {
-    :root{
-        --Width:97%;
-        --FrWidth:35%;
-        --BWidth:35%;
-        --LWidth:35%;
 
+
+const sheetId = '12mEgjJJRwnt7F37Q6oTd5clzb-FAflModBVjDgOupuE';
+const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
+const sheetName1 = 'Branches';
+const sheetName2 = 'Supplier';
+const sheetName3="Branches_Main";
+const sheetNameUser = 'Employee';
+const sheetImage ="Invoice_Image";
+let query = encodeURIComponent('Select *');
+let url = `${base}&sheet=${sheetName1}&tq=${query}`;
+let url2 = `${base}&sheet=${sheetName2}&tq=${query}`;
+let url3 = `${base}&sheet=${sheetName3}&tq=${query}`;
+let urlUser = `${base}&sheet=${sheetNameUser}&tq=${query}`;
+let urlImage = `${base}&sheet=${sheetImage}&tq=${query}`;
+let data = [];
+let data2 = [];
+let data3 = [];
+let DataUsers = [];
+let DataImage = [];
+document.addEventListener('DOMContentLoaded', init)
+function init() {
+  document.getElementById("iframX").src= "https://drive.google.com/file/d/1wyAPehMCGGBd54jhenpKf88eFvph7NiZ/view?usp=drivesdk"
+  LoadUser();
+  if (typeof(Storage) !== "undefined") {
+    if( localStorage.getItem("User_Id")!==null){
+      document.getElementById("loginPage").style.display="none";
+      document.getElementById("MainPage").style.display="flex";
+      let Employee_ID=document.getElementById("Employee_ID")
+      Employee_ID.value =localStorage.getItem("User_Id");
+      document.getElementById("Employee_Name").value=localStorage.getItem("User_Name");
+      document.getElementById("Bill_Number").value=localStorage.getItem("CountBill");
     }
   }
-@media screen and (min-width: 451px)and (max-width: 650px)  {
-    :root{
-        --Width:92%;
-        --FrWidth:35%;
-        --BWidth:35%;
-        --LWidth:35%;
+        loadBranches();
+        loadSupplier();
+        loadBranchMain();
+        loadImagesUrls();
     }
+function LoadUser(){
+  DataUsers=[];
+  fetch(urlUser)
+  .then(res => res.text())
+  .then(rep => {
+      const jsonData = JSON.parse(rep.substring(47).slice(0, -2));
+      const colzUser = [];
+      jsonData.table.cols.forEach((heading) => {
+          if (heading.label) {
+              let columnUser = heading.label;
+              colzUser.push(columnUser);
+          }
+      })
+      jsonData.table.rows.forEach((rowData) => {
+          const rowUser = {};
+          colzUser.forEach((ele, ind) => {
+              rowUser[ele] = (rowData.c[ind] != null) ? rowData.c[ind].v : '';
+          })
+          DataUsers.push(rowUser);
+      })
+  })
+}
+function loadBranches(){
+  data = [];
+  fetch(url)
+  .then(res => res.text())
+  .then(rep => {
+      const jsonData = JSON.parse(rep.substring(47).slice(0, -2));
+      const colz = [];
+      jsonData.table.cols.forEach((heading) => {
+          if (heading.label) {
+              let columnBranches = heading.label;
+              colz.push(columnBranches);
+          }
+      })
+      jsonData.table.rows.forEach((rowData) => {
+          const row = {};
+          colz.forEach((ele, ind) => {
+              row[ele] = (rowData.c[ind] != null) ? rowData.c[ind].v : '';
+          })
+          data.push(row);
+      })
+      Loadinput();
+  })
+}
+function loadSupplier(){
+  data2 = [];
+  fetch(url2)
+  .then(res => res.text())
+  .then(rep => {
+      const jsonData = JSON.parse(rep.substring(47).slice(0, -2));
+      const colz2 = [];
+      jsonData.table.cols.forEach((heading) => {
+          if (heading.label) {
+              let column2 = heading.label;
+              colz2.push(column2);
+          }
+      })
+      jsonData.table.rows.forEach((rowData) => {
+          const row2 = {};
+          colz2.forEach((ele, ind) => {
+              row2[ele] = (rowData.c[ind] != null) ? rowData.c[ind].v : '';
+          })
+          data2.push(row2);
+      })
+      Loadinput2();
+  })
+}
+function loadBranchMain(){
+  data3 = [];
+  fetch(url3)
+  .then(res => res.text())
+  .then(rep => {
+      const jsonData = JSON.parse(rep.substring(47).slice(0, -2));
+      const colz3 = [];
+      jsonData.table.cols.forEach((heading) => {
+          if (heading.label) {
+              let column3 = heading.label;
+              colz3.push(column3);
+          }
+      })
+      jsonData.table.rows.forEach((rowData) => {
+          const row3 = {};
+          colz3.forEach((ele, ind) => {
+              row3[ele] = (rowData.c[ind] != null) ? rowData.c[ind].v : '';
+          })
+          data3.push(row3);
+      })
+      Loadinput3();
+  })
+}
+function loadImagesUrls(){
+  DataImage = [];
+  fetch(urlImage)
+  .then(res => res.text())
+  .then(rep => {
+      const jsonData = JSON.parse(rep.substring(47).slice(0, -2));
+      const colImage = [];
+      jsonData.table.cols.forEach((heading) => {
+          if (heading.label) {
+              let column = heading.label;
+              colImage.push(column);
+          }
+      })
+      jsonData.table.rows.forEach((rowData) => {
+          const rowImage = {};
+          colImage.forEach((ele, ind) => {
+              rowImage[ele] = (rowData.c[ind] != null) ? rowData.c[ind].v : '';
+          })
+          DataImage.push(rowImage);
+      })
+      LoadinputImage();
+  })
+  console.log(DataImage)
+}
+function LoadinputImage(){
+  let myDropdown= document.getElementById("AmFileSel");
+  let A_myDropdown;
+  var d = new Date();
+  var dT= d.getTime()
+  for (let index =  DataImage.length-1 ; index >= 0; index-=1){
+      if((dT -DataImage[index].TimeData) <=100000){
+        A_myDropdown=document.createElement("option");
+        A_myDropdown.id="myImage_" + index;
+        A_myDropdown.innerHTML=DataImage[index].File_Name;
+        A_myDropdown.value= DataImage[index].File_URL;
+        myDropdown.appendChild(A_myDropdown);
+      }
+  }
+  
+  onchangeinputImage();
 }
 
-@media screen and (min-width: 651px)and (max-width: 800px)  {
-    :root{
-        --Width:87%;
-        --FrWidth:40%;
-        --BWidth:35%;
-        --LWidth:35%;
+
+function onchangeinputImage(){
+  document.getElementById("AmFileTxt").textContent=document.getElementById("AmFileSel").value;
+}
+function ReloadImage(){
+  document.getElementById("refreshIm").className="fa fa-refresh fa-spin"
+  let myDropdown= document.getElementById("AmFileSel"); 
+  let myDropdown_L= myDropdown.children.length; 
+  for (let index = 0; index < myDropdown_L; index++) {
+    myDropdown.children.item(0).remove();
+  }
+  loadImagesUrls()
+  document.getElementById("refreshIm").className="fa fa-refresh"
+}
+function FindIdForBranch(BranchName){
+  for (let index = 0; index < data.length; index++) {
+    if( BranchName === data[index].Branch_name){
+      return data[index].Branch_MainNo;
+    } 
+  }
+}
+function FindMainFormID(MainId){
+  for (let index = 0; index < data3.length; index++) {
+    if( MainId === data3[index].Main_no){
+      return data3[index].Main_Name;
+    } 
+  }
+}
+
+function OnchangeBranch(){
+  let ZZ=FindIdForBranch(document.getElementById("BranchName").value);
+  let YY=FindMainFormID(ZZ);
+  document.getElementById("BranchMain").value=YY;
+}
+function Loadinput(){
+let myDropdown= document.getElementById("BranchName");
+let A_myDropdown;
+  for (let index = 0; index < data.length; index++) {
+    A_myDropdown=document.createElement("option");
+    A_myDropdown.id="my_" + index;
+    A_myDropdown.innerHTML=data[index].Branch_name;
+    A_myDropdown.value= data[index].Branch_name;
+    myDropdown.appendChild(A_myDropdown);
+  }
+  if( localStorage.getItem("User_Id")!==null){
+    document.getElementById("BranchName").value=localStorage.getItem("Branch_name");
+    OnchangeBranch();
+  }
+}
+
+function ReloadBranchName(){
+  document.getElementById("refresh").className="fa fa-refresh fa-spin"
+  let myDropdown= document.getElementById("BranchName"); 
+  let myDropdown_L= myDropdown.children.length; 
+  for (let index = 0; index < myDropdown_L; index++) {
+    myDropdown.children.item(0).remove();
+  }
+  loadBranches()
+  Loadinput()
+  document.getElementById("refresh").className="fa fa-refresh"
+}
+
+function Loadinput3(){
+  let myDropdown= document.getElementById("BranchMain");
+  let A_myDropdown;
+    for (let index = 0; index < data3.length; index++) {
+      A_myDropdown=document.createElement("option");
+      A_myDropdown.id="my1_" + index;
+      A_myDropdown.innerHTML=data3[index].Main_Name;
+      A_myDropdown.value= data3[index].Main_Name;
+      myDropdown.appendChild(A_myDropdown);
     }
-}
-@media screen and (min-width: 801px)  {
-    :root{
-        --Width:87%;
-        --FrWidth:45%;
-        --BWidth:35%;
-        --LWidth:35%;
+    if( localStorage.getItem("User_Id")!==null){ LoadDataSignIn();}
+  }
+
+  function ReloadBranchMain(){
+    document.getElementById("refresh1").className="fa fa-refresh fa-spin"
+    let myDropdown= document.getElementById("BranchMain"); 
+    let myDropdown_L= myDropdown.children.length; 
+    for (let index = 0; index < myDropdown_L; index++) {
+      myDropdown.children.item(0).remove();
     }
+    loadBranchMain();
+    Loadinput3();
+    document.getElementById("refresh1").className="fa fa-refresh"
+  }
+function Loadinput2(){
+let myDropdown3= document.getElementById("myDropdown3");
+let A_myDropdown3
+for (let index = 0; index < data2.length; index++) {
+  A_myDropdown3=document.createElement("a");
+  A_myDropdown3.id="my2_" + index;
+  A_myDropdown3.textContent=data2[index].Supplier_Name;
+  A_myDropdown3.href='#'+ data2[index].Supplier_Name;
+  A_myDropdown3.style.textAlign="center";
+  A_myDropdown3.onclick=function(){MoveName3(this)} ;
+  myDropdown3.appendChild(A_myDropdown3);
+}
+}
+function ReloadmyDropdown3(){
+  FoucusOutInput3();
+  document.getElementById("refresh2").className="fa fa-refresh fa-spin"
+  let myDropdown= document.getElementById("myDropdown3"); 
+  let myDropdown_L= myDropdown.children.length; 
+  for (let index = 0; index < myDropdown_L; index++) {
+    myDropdown.children.item(0).remove();
+  }
+  loadSupplier()
+  Loadinput2()
+  document.getElementById("refresh2").className="fa fa-refresh"
+}
+function MoveName3(XXX){
+  let myInput3=document.getElementById("myInput3");
+  myInput3.value=XXX.textContent;
+    let zz=[];
+     zz=String(XXX.id).split('_');
+    document.getElementById("IndmyInput3").textContent=  Number(zz[1]) ;
+    FoucusOutInput3();
+}
+function FoucusInput3() {
+  document.getElementById("myDropdown3").className="dropdown-content"; 
 }
 
-
-html {
-height: 100%;
+function FoucusOutInput3() {
+    document.getElementById("myDropdown3").className="Unshow";
 }
-body {
-margin: 0;
-padding: 0;
-font-family: sans-serif;
-background: linear-gradient(var(--FColor), var(--EColor));
-}
-form{
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    justify-content: space-around;
-    border: solid 1px var(--Row1Color);
-    padding: 5px;
-}
-.hh{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    border-top: solid 1px var(--Row1Color);
-    border-right: solid 1px var(--Row1Color);
-    border-left: solid 1px var(--Row1Color);
-    height: 50px;
-
-}
-.login-box {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: var(--Width);
-    height: 82%;
-    padding: 1%;
-    transform: translate(-50%, -50%);
-    background-color: var(--loginColor);
-    box-sizing: border-box;
-    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.6);
-    border-radius: 10px;
-    font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
-    font-weight: 600;
+function filterFunction3() {
+  var input, filter, ul, li, a, i;
+  input = document.getElementById("myInput3");
+  filter = input.value.toUpperCase();
+  div = document.getElementById("myDropdown3");
+  a = div.getElementsByTagName("a");
+  for (i = 0; i < a.length; i++) {
+    txtValue = a[i].textContent || a[i].innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      a[i].style.display = "";
+    } else {
+      a[i].style.display = "none";
     }
-    
-    h1 {
-    color: var(--Font2Color);
-    text-align: center;
-    }
-.First_Row,.Second_Row{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-}
-.Employee_ID_Div{
-    width: 30%;
-    display: flex;
-    flex-direction: row-reverse;
-    align-items: center;
-    border: solid 1px var(--Row1Color);
-    justify-content: space-between;
-    height: 36px;
-    padding-right: 5px;
-}
-.Employee_ID_Div input{
-border-radius: 25px;
-border: none;
-background-color: var(--Row1BackColor);
-width: 50%;
-height: 25px;
-text-align: center;
-}
-.Employee_ID_Div label{
-    font-weight: bold;
-    width: 50%;
-    }
-
-.UserName_Div{
-    display: flex;
-    align-items: center;
-    width: 50%;
-    justify-content:center;
-    height: 36px;
+  }
 }
 
-.UserName_Div input{
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    font-weight: 600;
-    border: none;
-    height: 30px;
-    color: var(--Font3Color);
-    background-color: var(--inputBackColor);
+function FoucusOutInput02() {
+    document.getElementById("myDropdown3").className="Unshow";
+}
+function LoadDataSignIn(){
+  for (let index = 0; index < data3.length; index++) {
+    if(localStorage.getItem("Main_Id")==data3[index].Main_no){document.getElementById("BranchMain").value=data3[index].Main_Name;return}
+  }
+}
+function OpenNewBranch(){
+var theTop=((screen.height-500)/2);
+var theLeft=((screen.width-700)/2);
+var features = `height=500,width=700,top=${theTop},left=${theLeft},toolbar=1,Location=0,Directories=0,Status=0,menubar=1,Scrollbars=1,Resizable=1`;
+window.open("https://new-branch.blogspot.com/","_blank",features)
+}
+function OpenNewBranchMain(){
+var theTop=((screen.height-400)/2);
+var theLeft=((screen.width-600)/2);
+var features = `height=400,width=600,top=${theTop},left=${theLeft},toolbar=1,Location=0,Directories=0,Status=0,menubar=1,Scrollbars=1,Resizable=1`;
+window.open("https://new-branch-main.blogspot.com/","_blank",features)
+}
+function OpenNewSupplier(){
+var theTop=((screen.height-400)/2);
+var theLeft=((screen.width-600)/2);
+var features = `height=400,width=600,top=${theTop},left=${theLeft},toolbar=1,Location=0,Directories=0,Status=0,menubar=1,Scrollbars=1,Resizable=1`;
+window.open("https://new-supplier.blogspot.com/","_blank",features);
+}
+function OpenUsers(){
+  localStorage.clear();
+  location.reload();
+  document.getElementById("loginPage").style.display="flex";
+  document.getElementById("MainPage").style.display="none";
 }
 
-
-.Bill_Number_Div{
-    display: flex;
-    align-items: center;
-    justify-content:center;
-    border: solid 1px var(--Row1Color);
-    width: 15%;
-    height: 36px;
-    
-}
-
-.Bill_Number_Div input{
-    text-align: center;
-    width: 80%;
-    border-radius: 25px;
-    border: none;
-    background-color: var(--Row1BackColor);
-    height: 25px;
-}
-
-.BranchName_Div,.BranchMain_Div,#Branch_name_form div ,#Branch_Main_form div ,#Supplier_form div{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    border: solid 1px var(--Row1Color);
-    height: 36px;
-    width: 49%;
-    justify-content: space-between;
-    padding-right: 5px;
-    
-}
+function OpenFormUpload(){
+  var theTop=((screen.height-400)/2);
+  var theLeft=((screen.width-600)/2);
+  var features = `height=400,width=600,top=${theTop},left=${theLeft},toolbar=1,Location=0,Directories=0,Status=0,menubar=1,Scrollbars=1,Resizable=1`;
+    //  navigator.clipboard.writeText(Employee_ID.value);     
+  window.open("https://script.google.com/macros/s/AKfycbxquaAt3c9-OC11WUNnEJjE6x8ZwK4KqOteS--DiaFY3-RTaGzKW9MQc2az90OESfL-MA/exec","_blank",features);
+ }
 
 
-
-
-.BranchName_Div select,.BranchMain_Div select,#Branch_name_form  input,#Branch_Main_form input,#Supplier_form input{
-    width: 52%;
-    height: 25px;
-    background-color: var(--inputBackColor);
-    color: var(--Font3Color);
-    text-align: center;
-}
-.BranchName_Div select option,.BranchMain_Div select option{
-    background-color:rgb(235, 232, 232); 
-}
-.NewBr{
-    width: 17.5%;
-    padding: 4px 0;
-    font-size: 14px;
-    color: var(--Font2Color);
-    border: 1px solid var(--FontColor);
-    font-weight: bolder;
-    background-color: inherit;
-    border-radius: 5px;
-    transition: 0.5s;
-}
-.Three_Div{
-    display: flex;
-    flex-direction: row;
-    height: 70%;
-    justify-content: space-between;
-}
-
-.Three_Div .Three_Div1{
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 80%;
-    justify-content: space-evenly;
- 
-}
-.UpLoad_Div{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 18%;
-    justify-content: flex-start;
-}
-.Three_Div .Three_Div3{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 40%;
-    justify-content: space-between;
-    border: solid 1px var(--Row1Color);
-}
-.Three_Div .Three_Div2{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 59%;
-    justify-content: space-between;
-    
-}
-
-.user-box  {
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-width: 100%;
-border: solid 1px var(--Row1Color);
-height: 36px;
-align-items: center;
-padding-right: 5px;
-}
-
-.user-box label {
-    width: 30%;
-   }
-.user-box input {
-    width: 69%;
-    font-size: 14px;
-    color: var(--Font3Color);
-    outline: none;
-    background-color: var(--inputBackColor);
-    direction: rtl;
-    height: 25px;
-    border: none;
-    text-align: center;
-    }
-    
-    /* .user-box button {
-        width: 20%;
-       } */
-
-.login-box .user-box select {
-font-size: 14px;
-color: var(--FontColor);
-border: 1px solid var(--FontColor);
-outline: none;
-background: transparent;
-direction: rtl;
-}
-
-.BranchName_Div label,.BranchMain_Div label{
-    padding: 4px 0px;
-    width: 22%;
-}
-#Branch_name_form  label,#Branch_Main_form label{
-    padding: 4px 5px;
-    width: 22%;
-}
-
-#Supplier_form label{
-    padding: 4px 5px;
-    width: 24%;
-}
-
-.login-box  label ,#Branch_name_form  label,#Branch_Main_form label #Supplier_form label{
-padding-left: 5px;
-font-size: 14px;
-color: var(--Font2Color);
-transition: 0.5s;
-}
-
-
-
- #Moon, #Sun ,#Moon1, #Sun1{
-position: fixed;
-top: 15px;
-left: 15px;
-font-size: 20px;
-color: white;
-}
-
-.Buto {
-display: inline-block;
-padding: 6px 15px;
-color: white;
-font-size: 16px;
-font-weight: bolder;
-text-decoration: none;
-text-transform: uppercase;
-overflow: hidden;
-transition: 0.5s;
-border:  var(--Font2Color)  inset 1px;
-background-color: inherit;
-border-radius: 5px;
-width:100% ;
-background-color: rgb(248, 86, 86)
-}
-.BB0 .Buto {
-    background-color:rgb(56, 159, 255);
-    }
-
-.Buto a {   
-    font-size: 20px;
-    margin-right: 5px;
-}
-
-.Buto:hover , .NewBr:hover{
-background-color: #d3f6f8;
-color: var(--Font3Color);
-border-radius: 5px;
-box-shadow: 0 0 5px var(--Font2Color), 0 0 25px var(--Font2Color), 0 0 50px var(--Font2Color),
-0 0 100px var(--Font2Color);
-border: var(--Font2Color) solid 1px;
-}
-#Upload:hover{
-    background: #d3f6f8;
-    color: var(--Font3Color);
-    border-radius: 5px;
-    box-shadow: 0 0 5px var(--Font2Color), 0 0 25px var(--Font2Color), 0 0 50px var(--Font2Color),
-    0 0 100px var(--Font2Color);
-    border: var(--Font2Color) solid 1px;
-}
-#AmFileTxt,#AmFileSel{
-    width: 80%;
-    height: auto;
-    color: var(--Font3Color);
-    background-color: var(--inputBackColor);
-    border:  var(--Font2Color)  inset 1px;
-    margin-top: 5px;
+function ConvertModeToSun(){
+  document.getElementById("Moon").style.display="inline-block";
+  document.getElementById("Sun").style.display="none";
+  document.getElementById("Moon1").style.display="inline-block";
+  document.getElementById("Sun1").style.display="none";
+  document.querySelector(':root').style.setProperty('--FColor', "wheat"); 
+  document.querySelector(':root').style.setProperty('--EColor', "white");
+  document.querySelector(':root').style.setProperty('--loginColor', "whitesmoke"); 
+  document.querySelector(':root').style.setProperty('--FontColor', "#f2a20b"); 
+  document.querySelector(':root').style.setProperty('--Font2Color', "#a53333"); 
+  document.querySelector(':root').style.setProperty('--Font3Color', "#a53333"); 
 } 
-#Upload{
-display: flex;
-padding: 6px 15px;
-justify-content: center;
-align-items: center;
-font-size: 16px;
-font-weight: bolder;
-text-decoration: none;
-text-transform: uppercase;
-overflow: hidden;
-transition: 0.5s;
-border:  var(--Font2Color)  inset 1px;
-border-radius: 5px;
-background-color: rgb(240, 234, 234);
-width : 40% ;
-height : 20% ;
-margin-top: 5px;
-}
-.BB{
-    display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-around;
-    width: 100%;
-    height:30%;
-    align-items: flex-end;
-    padding-right: 5px;
-}
-.BB0{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    width: 40%;
-    height: 80px;
-    align-items: center;
-    padding-right: 5px;
-}
-.BA button{
-border-color: var(--FColor);
-}
-#SelectBranch  option{
-    background-color: var(--EColor);
+function ConvertModeToMoon(){
+  document.getElementById("Sun").style.display="inline-block";
+  document.getElementById("Moon").style.display="none";
+  document.getElementById("Sun1").style.display="inline-block";
+  document.getElementById("Moon1").style.display="none";
+  document.querySelector(':root').style.setProperty('--FColor', "#141e30"); 
+  document.querySelector(':root').style.setProperty('--EColor', "#243b55");
+  document.querySelector(':root').style.setProperty('--loginColor', "#00000080"); 
+  document.querySelector(':root').style.setProperty('--FontColor', "white"); 
+  document.querySelector(':root').style.setProperty('--Font2Color', "#d3f6f8"); 
+  document.querySelector(':root').style.setProperty('--Font3Color', "black"); 
+}  
+
+function IsfoundBranch(){
+  let Branch_ID= document.getElementById("Branch_ID");
+  let error_Branch_ID= document.getElementById("error_Branch_ID");
+  for (let index = 0; index < data.length; index++) {
+    if(Branch_ID.value==data[index].Branch_no){
+      localStorage.setItem("Branch_Index", index);
+       return true;
+      }
+  }
+  error_Branch_ID.className="fa fa-warning";
+  return false ;
 }
 
-.dropdown-content {
-    display: block;
-    position: absolute;
-    background-color: var(--EColor);
-    min-width: calc( var(--FrWidth));
-    overflow: auto;
-    z-index: 0;
-    top: 249px;
-    box-shadow: 0 0 5px var(--Font2Color), 0 0 25px var(--Font2Color), 0 0 50px var(--Font2Color);
-}
-
-.Unshow {display: none; }
-
-.dropdown-content a {
-  color: var(--FontColor);
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-  background-color: var(--EColor);
-}
-
-.dropdown-content a:hover {
-    background-color: var(--Font2Color);
-    color: var(--EColor);
-    
-}
-
-#Branch_name_form div,#Branch_Main_form div,#Supplier_form div{
-    width: 98%;
-    justify-content: space-between;
-    align-items: center;
-    height: 10%;
-}
-#Branch_name_form input,#Branch_name_form select,#Branch_Main_form input , #Supplier_form input{
-    border:  none;
-    width: 75%;
-    height: 66%;
-    font-size: 14px;
-    padding: 2px 1px;
-
-}
-#Branch_name_form button,#Branch_Main_form button , #Supplier_form button{
-height: 80%;
-width: 70%;
-}
-#Branch_name_form .BB0,#Branch_Main_form .BB0,#Supplier_form .BB0{
-        display: flex;
-        justify-content: center;
-        height: 50px;
+function IsfoundUser(){
+  let User_PassWord= document.getElementById("User_PassWord");
+  let error_User_ID= document.getElementById("error_User_ID");
+    for (let index = 0; index < DataUsers.length; index++) {
+      if(User_PassWord.value==DataUsers[index].Employee_PassWord){
+        localStorage.setItem("Employee_Index", index);
+        return true;
+      }
     }
-#error_Branch_ID,#error_User_ID{
-        margin-left: 1%; 
-        font-size:28px;color:red; 
-        width: 5%;
+      error_User_ID.className="fa fa-warning";
+      return false ;
+  }
+
+
+function Istrue(){
+  let User_PassWord= document.getElementById("User_PassWord");
+  let Branch_ID= document.getElementById("Branch_ID");
+  let error_User_ID= document.getElementById("error_User_ID");
+  let error_Branch_ID= document.getElementById("error_Branch_ID");
+  if(User_PassWord.value===""){ error_User_ID.className="fa fa-warning"; return false;}else{ error_User_ID.className="" }
+  if(IsfoundUser()===false){return false}else{error_User_ID.className=""}
+  if(Branch_ID.value===""){ error_Branch_ID.className="fa fa-warning" ; return false; }else{ error_Branch_ID.className=""}
+  if(IsfoundBranch()===false){return false}else{error_Branch_ID.className="" }
+  return true;
 }
-#Eye_Password{
-    margin-left: 1%;
-    margin-right: 1%;
-    font-size:25px;color:green; 
-    width: 5%;
+
+function Sign_In(){
+  if (Istrue()===true){
+    let Employee_Index = localStorage.getItem("Employee_Index");
+    let Branch_Index = localStorage.getItem("Branch_Index");
+    localStorage.setItem("User_Id", DataUsers[Employee_Index].Employee_ID );
+    localStorage.setItem("User_Name", DataUsers[Employee_Index].Emplyee_Name);
+    localStorage.setItem("CountBill", DataUsers[Employee_Index].Count_Bill);
+    localStorage.setItem("Branch_name",data[Branch_Index].Branch_name);
+    localStorage.setItem("Main_Id",data[Branch_Index].Branch_MainNo);
+    document.getElementById("loginPage").style.display="none";
+    document.getElementById("MainPage").style.display="flex";
+    location.reload();
+  }
 }
-#imgX{
-max-width: 100%;
-    vertical-align: bottom;
-    height: auto;
-    width: auto;
+function IstrueDataInform(){
+  let BranchName=document.getElementById("BranchName");
+  let BranchMain=document.getElementById("BranchMain");
+  let myInput3=document.getElementById("myInput3");
+  let NumIn=document.getElementById("NumIn");
+  let DatIn=document.getElementById("DatIn");
+  let AmIn=document.getElementById("AmIn");
+  if(BranchName.value==""){BranchName.style.border="2px solid #ff0000";return false}else{BranchName.style.border="none";}
+  if(BranchMain.value==""){BranchMain.style.border="2px solid #ff0000";return false}else{BranchMain.style.border="none";}
+  if(myInput3.value==""){myInput3.style.border="2px solid #ff0000";  return false}else{myInput3.style.border="none";}
+  if(NumIn.value==""){NumIn.style.border="2px solid #ff0000";return false}else{NumIn.style.border="none";}
+  if(DatIn.value==""){DatIn.style.border="2px solid #ff0000";return false}else{DatIn.style.border="none";}
+  if(AmIn.value==""){AmIn.style.border="2px solid #ff0000";return false}else{AmIn.style.border="none";}
+  return true
+}
+function onsubmitForm(){
+  if(IstrueDataInform()===true){
+  let MainForm=document.getElementById("MainForm");
+  let Employee_Index=localStorage.getItem("Employee_Index");
+  var w = window.open('', 'form_target', 'width=600, height=400');
+  MainForm.target = 'form_target';
+  MainForm.action='https://script.google.com/macros/s/AKfycbxD0Ng6puf82pne2e6RQ4cx8mmEWwM7Ava5Ak0mMpKdtT22_3jBcPwrkG7eyY7II00M/exec'
+  MainForm.submit();
+  if (MainForm.onsubmit()==true){
+    const myTimeout = setTimeout(function(){ 
+      LoadUser();
+      const myTimeout1 = setTimeout(function(){ 
+      if(DataUsers[Employee_Index].Count_Bill>document.getElementById("Bill_Number").value){
+        window.alert(DataUsers[Employee_Index].Count_Bill)
+        localStorage.setItem("CountBill", DataUsers[Employee_Index].Count_Bill);
+                w.close();
+                clearTimeout(myTimeout)
+                clearTimeout(myTimeout1)
+                location.reload();
+      } 
+    }, 3000);}, 8000);
+  }}
+} 
+
+function ShowPassword(){
+  let User_PassWord= document.getElementById("User_PassWord");
+  let Eye_Password= document.getElementById("Eye_Password");
+  if (Eye_Password.className=="fa fa-eye"){
+    User_PassWord.type="text";
+    Eye_Password.className="fa fa-eye-slash";
+  }else{
+    User_PassWord.type="password";
+    Eye_Password.className="fa fa-eye";
+  }
+}
+
+function showpicture(){
+  document.getElementById("imgX").src=  document.getElementById("AmFileTxt").textContent
+
 }
