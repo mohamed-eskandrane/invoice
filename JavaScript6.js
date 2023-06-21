@@ -1,6 +1,6 @@
 
 
-const sheetId = '12mEgjJJRwnt7F37Q6oTd5clzb-FAflModBVjDgOupuE';
+const sheetId = '1DQs3_zIuk4dMq0jb1IIrPtAL59nd5OY_xrWrnf7Tts4';
 const base = `https://docs.google.com/spreadsheets/d/${sheetId}/gviz/tq?`;
 const sheetName1 = 'Branches';
 const sheetName2 = 'Supplier';
@@ -149,7 +149,6 @@ function loadImagesUrls(){
       })
       LoadinputImage();
   })
-  console.log(DataImage)
 }
 function LoadinputImage(){
   let myDropdown= document.getElementById("AmFileSel");
@@ -452,14 +451,13 @@ function onsubmitForm(){
   let Employee_Index=localStorage.getItem("Employee_Index");
   var w = window.open('', 'form_target', 'width=600, height=400');
   MainForm.target = 'form_target';
-  MainForm.action='https://script.google.com/macros/s/AKfycbxD0Ng6puf82pne2e6RQ4cx8mmEWwM7Ava5Ak0mMpKdtT22_3jBcPwrkG7eyY7II00M/exec'
+  MainForm.action='https://script.google.com/macros/s/AKfycbyJVVcqy7Xjk4f_kTA-sbaYbDH_X_j41XTBOlZbwGZ2rfP-6eCP205Fem8rYV2dIxQc/exec'
   MainForm.submit();
   if (MainForm.onsubmit()==true){
     const myTimeout = setTimeout(function(){ 
       LoadUser();
       const myTimeout1 = setTimeout(function(){ 
       if(DataUsers[Employee_Index].Count_Bill>document.getElementById("Bill_Number").value){
-        window.alert(DataUsers[Employee_Index].Count_Bill)
         localStorage.setItem("CountBill", DataUsers[Employee_Index].Count_Bill);
                 w.close();
                 clearTimeout(myTimeout)
@@ -483,6 +481,11 @@ function ShowPassword(){
 }
 
 function showpicture(){
-  document.getElementById("imgX").src=  document.getElementById("AmFileTxt").textContent
+  let SS =document.getElementById("AmFileTxt")
+  let xx=SS.value
+  let sp=xx.search("/d/")
+  let ep=xx.search("/view")
+  let Id=xx.substring(sp+3,ep)
+  document.getElementById("imgX").src= `https://drive.google.com/uc?export=view&id=${Id}`
 
 }
