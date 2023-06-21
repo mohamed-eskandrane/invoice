@@ -20,7 +20,6 @@ let DataUsers = [];
 let DataImage = [];
 document.addEventListener('DOMContentLoaded', init)
 function init() {
-  document.getElementById("iframX").src= "https://drive.google.com/file/d/1wyAPehMCGGBd54jhenpKf88eFvph7NiZ/view?usp=drivesdk"
   LoadUser();
   if (typeof(Storage) !== "undefined") {
     if( localStorage.getItem("User_Id")!==null){
