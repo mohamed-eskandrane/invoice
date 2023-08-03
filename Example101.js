@@ -320,19 +320,19 @@ function OpenNewBranch(){
 var theTop=((screen.height-500)/2);
 var theLeft=((screen.width-700)/2);
 var features = `height=500,width=700,top=${theTop},left=${theLeft},toolbar=1,Location=0,Directories=0,Status=0,menubar=1,Scrollbars=1,Resizable=1`;
-window.open("https://new-branch.blogspot.com/","_blank",features)
+window.open("https://newbranch101.blogspot.com/","_blank",features)
 }
 function OpenNewBranchMain(){
 var theTop=((screen.height-400)/2);
 var theLeft=((screen.width-600)/2);
 var features = `height=400,width=600,top=${theTop},left=${theLeft},toolbar=1,Location=0,Directories=0,Status=0,menubar=1,Scrollbars=1,Resizable=1`;
-window.open("https://new-branch-main.blogspot.com/","_blank",features)
+window.open("https://newbranchmain101.blogspot.com/","_blank",features)
 }
 function OpenNewSupplier(){
 var theTop=((screen.height-400)/2);
 var theLeft=((screen.width-600)/2);
 var features = `height=400,width=600,top=${theTop},left=${theLeft},toolbar=1,Location=0,Directories=0,Status=0,menubar=1,Scrollbars=1,Resizable=1`;
-window.open("https://new-supplier.blogspot.com/","_blank",features);
+window.open("https://newsupplier101.blogspot.com/","_blank",features);
 }
 function OpenUsers(){
   localStorage.clear();
